@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Segment, Header, Item } from "semantic-ui-react";
+import Image from "react-graceful-image";
 
 class ArticleContent extends Component {
   renderContent = () => {
@@ -14,7 +15,15 @@ class ArticleContent extends Component {
     }
 
     if (type === "image") {
-      return <img src={model.url} alt={model.altText} />;
+      return (
+        <Image
+          src={model.url}
+          alt={model.altText}
+          width="640"
+          height="420"
+          placeholderColor="#b1b1b1"
+        />
+      );
     }
 
     if (type === "list") {
