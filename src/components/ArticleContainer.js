@@ -41,7 +41,7 @@ class ArticleContainer extends Component {
     console.log(err);
   };
 
-  addNextArticleToCurrentArticle = () => {
+  showNextArticle = () => {
     const { readArticles, currentArticle, nextArticle } = this.state;
     const isInsideOfArray = readArticles.includes(currentArticle);
     const nextArticleFetched = nextArticle !== currentArticle;
@@ -59,9 +59,7 @@ class ArticleContainer extends Component {
       <Container>
         <Segment>
           <Article currentArticle={this.state.currentArticle} />
-          <button onClick={this.addNextArticleToCurrentArticle}>
-            Next Article
-          </button>
+          <button onClick={this.showNextArticle}>Go To Next Article</button>
         </Segment>
       </Container>
     );
