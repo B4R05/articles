@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Button, Container, Segment } from "semantic-ui-react";
 import Article from "./Article";
+import Rankings from "./Rankings";
 import api from "../api/api";
 
 class ArticleContainer extends Component {
@@ -10,7 +11,9 @@ class ArticleContainer extends Component {
     this.state = {
       currentArticle: {},
       nextArticle: {},
-      readArticles: []
+      readArticles: [],
+      showRankings: false,
+      error: false
     };
   }
 
@@ -39,6 +42,70 @@ class ArticleContainer extends Component {
 
   handleError = err => {
     console.log(err);
+    if (!err.response) {
+      // network error
+      this.setState({ error: true, errorType: "Network" });
+    } else {
+      // http status code
+      this.setState({ error: true, errorType: err.response.status });
+    }
+  };
+
+  showArticleOrRankingsComponent = () => {
+    if (this.state.showRankings) {
+      return this.showRankingsComponent();
+    }
+
+    if (Object.keys(this.state.currentArticle).length) {
+      return this.showArticleComponent();
+    }
+
+    return <Segment />;
+  };
+
+  showRankingsComponent = () => (
+    <Rankings readArticles={this.state.readArticles} />
+  );
+
+  showArticleComponent = () => {
+    let { currentArticle } = this.state;
+    let noCurrentArticle = !Object.keys(currentArticle).length;
+
+    return (
+      <Fragment>
+        <Article currentArticle={currentArticle} />
+        {this.showButton()}
+      </Fragment>
+    );
+  };
+
+  showButton = () => {
+    let { currentArticle, nextArticle, readArticles } = this.state;
+    if (Object.keys(readArticles).length === 4) {
+      return (
+        <Button
+          content="Proceed To Rankings Page"
+          onClick={this.handleShowRankings}
+        />
+      );
+    } else {
+      let isArticleDifferent = currentArticle === nextArticle ? true : false;
+      return (
+        <Button
+          disabled={isArticleDifferent}
+          loading={isArticleDifferent}
+          content="Go To Next Article"
+          onClick={this.showNextArticle}
+        />
+      );
+    }
+  };
+
+  handleShowRankings = () => {
+    this.setState({
+      showRankings: true,
+      readArticles: [...this.state.readArticles, this.state.currentArticle]
+    });
   };
 
   showNextArticle = () => {
@@ -55,11 +122,12 @@ class ArticleContainer extends Component {
   };
 
   render() {
+    let noCurrentArticle = !Object.keys(this.state.currentArticle).length;
+
     return (
       <Container>
-        <Segment>
-          <Article currentArticle={this.state.currentArticle} />
-          <button onClick={this.showNextArticle}>Go To Next Article</button>
+        <Segment loading={noCurrentArticle && true}>
+          {this.showArticleOrRankingsComponent()}
         </Segment>
       </Container>
     );
