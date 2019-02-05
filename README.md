@@ -4,6 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Click or hover on the commit messages to view an in-depth explanation behind the commits.
 
+- simulating slow network: user cannot click on Next Article until a next article is fetched
+- simulating offline: user cannot click on next article.
+-
 
 ## Available Scripts
 
