@@ -14,32 +14,30 @@ class ArticleContainer extends Component {
   }
 
   componentDidMount() {
-    this.fetchArticle();
+    this.fetchArticle("currentArticle");
   }
 
   componentDidUpdate(prevProps, prevState) {
     console.log(this.state);
     if (this.state.currentArticle !== prevState.currentArticle) {
-      this.fetchNextArticle();
+      this.fetchArticle("nextArticle");
     }
   }
 
-  fetchArticle = () => {
+  fetchArticle = property => {
     let randomNumber = Math.floor(Math.random() * 5) + 1;
-
     api
       .get(`/${randomNumber}`)
-      .then(res => this.setState({ currentArticle: res.data }))
-      .catch(err => console.log(err));
+      .then(res => this.handleResponse(property, res.data))
+      .catch(err => this.handleError(err));
   };
 
-  fetchNextArticle = () => {
-    let randomNumber = Math.floor(Math.random() * 5) + 1;
+  handleResponse = (property, value) => {
+    this.setState({ [property]: value });
+  };
 
-    api
-      .get(`/${randomNumber}`)
-      .then(res => this.setState({ nextArticle: res.data }))
-      .catch(err => console.log(err));
+  handleError = err => {
+    console.log(err);
   };
 
   addNextArticleToCurrentArticle = () => {
