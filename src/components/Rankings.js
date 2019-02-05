@@ -16,14 +16,14 @@ class Rankings extends Component {
     const foundArticle = ratings.find(obj => obj.title === title);
 
     if (foundArticle) {
-      //has user rated this article before? then find and update that same article.
+      //has user rated this article before? then 'update' that article.
       const arrayWithoutFound = ratings.filter(obj => obj !== foundArticle);
 
       this.setState({
         ratings: [...arrayWithoutFound, { rating, title }]
       });
     } else {
-      //if user never rated this article, create a new object with the rating set and article's title only
+      //if user never rated this article, create a new object with new values
       this.setState({ ratings: [...ratings, { rating, title }] });
     }
   };
@@ -73,6 +73,32 @@ class Rankings extends Component {
     }
   };
 
+  showMessage = () => {
+    let { errorType } = this.state;
+
+    if (this.state.error === false) {
+      return (
+        <Message positive>
+          <Message.Header>Success!</Message.Header>
+          <p>Thanks for submitting your rankings!</p>
+        </Message>
+      );
+    }
+    if (this.state.error) {
+      return (
+        <Message negative>
+          <Message.Header>An error occured.</Message.Header>
+          <p>
+            We could not submit your rankings.
+            {errorType === "Network"
+              ? " It looks like you may be offline. Please check your internet connection."
+              : ` The error code was: ${errorType}`}
+          </p>
+        </Message>
+      );
+    }
+  };
+
   componentDidUpdate() {
     console.log(this.state);
   }
@@ -95,6 +121,7 @@ class Rankings extends Component {
           }
           disabled={ratings.length === readArticles.length ? false : true}
         />
+        {this.showMessage()}
       </Fragment>
     );
   }

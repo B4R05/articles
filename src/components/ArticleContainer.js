@@ -1,8 +1,11 @@
 import React, { Component, Fragment } from "react";
-import { Button, Container, Segment } from "semantic-ui-react";
+import { Button, Container, Segment, Message, Icon } from "semantic-ui-react";
+
 import Article from "./Article";
 import Rankings from "./Rankings";
+
 import api from "../api/api";
+import returnRandomNumberOnce from "../helpers/helpers";
 
 class ArticleContainer extends Component {
   constructor(props) {
@@ -15,6 +18,8 @@ class ArticleContainer extends Component {
       showRankings: false,
       error: false
     };
+
+    this.randomNumbers = returnRandomNumberOnce([1, 2, 3, 4, 5]);
   }
 
   componentDidMount() {
@@ -26,10 +31,13 @@ class ArticleContainer extends Component {
     if (this.state.currentArticle !== prevState.currentArticle) {
       this.fetchArticle("nextArticle");
     }
+
+    let { currentArticle, nextArticle, readArticles } = this.state;
   }
 
   fetchArticle = property => {
-    let randomNumber = Math.floor(Math.random() * 5) + 1;
+    let randomNumber = this.randomNumbers.next().value;
+
     api
       .get(`/${randomNumber}`)
       .then(res => this.handleResponse(property, res.data))
@@ -75,13 +83,14 @@ class ArticleContainer extends Component {
       <Fragment>
         <Article currentArticle={currentArticle} />
         {this.showButton()}
+        {this.showMessage()}
       </Fragment>
     );
   };
 
   showButton = () => {
     let { currentArticle, nextArticle, readArticles } = this.state;
-    if (Object.keys(readArticles).length === 4) {
+    if (Object.keys(nextArticle).length === 0 && readArticles.length >= 4) {
       return (
         <Button
           content="Proceed To Rankings Page"
@@ -89,11 +98,15 @@ class ArticleContainer extends Component {
         />
       );
     } else {
-      let isArticleDifferent = currentArticle === nextArticle ? true : false;
+      let articlesAreDifferent =
+        currentArticle === nextArticle || Object.keys(nextArticle).length === 0
+          ? true
+          : false;
+
       return (
         <Button
-          disabled={isArticleDifferent}
-          loading={isArticleDifferent}
+          disabled={articlesAreDifferent}
+          loading={articlesAreDifferent}
           content="Go To Next Article"
           onClick={this.showNextArticle}
         />
@@ -118,6 +131,24 @@ class ArticleContainer extends Component {
         currentArticle: nextArticle,
         readArticles: [...readArticles, currentArticle]
       });
+    }
+  };
+
+  showMessage = () => {
+    let { errorType } = this.state;
+
+    if (this.state.error) {
+      return (
+        <Message negative>
+          <Message.Header>An error occured.</Message.Header>
+          <p>
+            We could not fetch the next article.
+            {errorType === "Network"
+              ? " It looks like you may be offline. Please check your internet connection."
+              : `The error code was: ${errorType}`}
+          </p>
+        </Message>
+      );
     }
   };
 
