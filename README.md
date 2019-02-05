@@ -1,5 +1,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Commit messages
+
+Click or hover on the commit messages to view an in-depth explanation behind the commits.
+
+
 ## Available Scripts
 
 In the project directory, you can run:
