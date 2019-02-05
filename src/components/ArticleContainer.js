@@ -3,8 +3,25 @@ import Article from "./Article";
 import api from "../api/api";
 
 class ArticleContainer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentArticle: {},
+      nextArticle: {},
+      readArticles: []
+    };
+  }
+
   componentDidMount() {
     this.fetchArticle();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(this.state);
+    if (this.state.currentArticle !== prevState.currentArticle) {
+      this.fetchNextArticle();
+    }
   }
 
   fetchArticle = () => {
@@ -12,14 +29,37 @@ class ArticleContainer extends Component {
 
     api
       .get(`/${randomNumber}`)
-      .then(res => console.log(res))
+      .then(res => this.setState({ currentArticle: res.data }))
       .catch(err => console.log(err));
+  };
+
+  fetchNextArticle = () => {
+    let randomNumber = Math.floor(Math.random() * 5) + 1;
+
+    api
+      .get(`/${randomNumber}`)
+      .then(res => this.setState({ nextArticle: res.data }))
+      .catch(err => console.log(err));
+  };
+
+  addNextArticleToCurrentArticle = () => {
+    const { readArticles, currentArticle, nextArticle } = this.state;
+    const isInsideOfArray = readArticles.includes(currentArticle);
+    const nextArticleFetched = nextArticle !== currentArticle;
+
+    if (!isInsideOfArray && nextArticleFetched) {
+      this.setState({
+        currentArticle: nextArticle,
+        readArticles: [...readArticles, currentArticle]
+      });
+    }
   };
 
   render() {
     return (
       <div>
         <Article />
+        <button onClick={this.addNextArticleToCurrentArticle}>Click</button>
       </div>
     );
   }
