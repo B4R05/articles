@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button, Container, Segment } from "semantic-ui-react";
 import Article from "./Article";
 import api from "../api/api";
 
@@ -55,10 +56,14 @@ class ArticleContainer extends Component {
 
   render() {
     return (
-      <div>
-        <Article />
-        <button onClick={this.addNextArticleToCurrentArticle}>Click</button>
-      </div>
+      <Container>
+        <Segment>
+          <Article currentArticle={this.state.currentArticle} />
+          <button onClick={this.addNextArticleToCurrentArticle}>
+            Next Article
+          </button>
+        </Segment>
+      </Container>
     );
   }
 }
