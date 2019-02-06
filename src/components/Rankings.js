@@ -11,13 +11,13 @@ class Rankings extends Component {
   };
 
   rateArticleTitle = (rating, title) => {
-    const { ratings } = this.state;
+    let { ratings } = this.state;
 
-    const foundArticle = ratings.find(obj => obj.title === title);
+    let foundArticle = ratings.find(obj => obj.title === title);
 
     if (foundArticle) {
       //has user rated this article before? then 'update' that article.
-      const arrayWithoutFound = ratings.filter(obj => obj !== foundArticle);
+      let arrayWithoutFound = ratings.filter(obj => obj !== foundArticle);
 
       this.setState({
         ratings: [...arrayWithoutFound, { rating, title }]
@@ -29,15 +29,13 @@ class Rankings extends Component {
   };
 
   renderRankingsArticleTitles = () => {
-    return this.props.readArticles.map(article => {
-      return (
-        <RankingsArticleTitle
-          article={article}
-          key={article.title}
-          rate={this.rateArticleTitle}
-        />
-      );
-    });
+    return this.props.readArticles.map(article => (
+      <RankingsArticleTitle
+        article={article}
+        key={article.title}
+        rate={this.rateArticleTitle}
+      />
+    ));
   };
 
   handleClick = () => {
@@ -55,7 +53,6 @@ class Rankings extends Component {
 
   sendSuccess = res => {
     this.setState({ loading: false, error: false });
-    console.log(res);
   };
 
   sendError = err => {
@@ -78,15 +75,16 @@ class Rankings extends Component {
 
     if (this.state.error === false) {
       return (
-        <Message positive>
+        <Message positive role="alert">
           <Message.Header>Success!</Message.Header>
           <p>Thanks for submitting your rankings!</p>
         </Message>
       );
     }
+
     if (this.state.error) {
       return (
-        <Message negative>
+        <Message negative role="alert">
           <Message.Header>An error occured.</Message.Header>
           <p>
             We could not submit your rankings.
@@ -99,26 +97,23 @@ class Rankings extends Component {
     }
   };
 
-  componentDidUpdate() {
-    console.log(this.state);
-  }
-
   render() {
-    const { ratings } = this.state;
-    const { readArticles } = this.props;
+    let { ratings } = this.state;
+    let { readArticles } = this.props;
+    let buttonContent =
+      ratings.length === readArticles.length
+        ? "Send"
+        : "Please rate all articles";
 
     return (
       <Fragment>
         <Segment.Group>{this.renderRankingsArticleTitles()}</Segment.Group>
         <Button
           primary
+          aria-label={buttonContent}
           loading={this.state.loading}
           onClick={this.handleClick}
-          content={
-            ratings.length === readArticles.length
-              ? "Send"
-              : "Please rate all articles"
-          }
+          content={buttonContent}
           disabled={ratings.length === readArticles.length ? false : true}
         />
         {this.showMessage()}

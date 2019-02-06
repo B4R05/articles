@@ -2,27 +2,34 @@ import React, { Component } from "react";
 import { Segment, Header, Item } from "semantic-ui-react";
 import Image from "react-graceful-image";
 
-class ArticleContent extends Component {
-  renderContent = () => {
-    const { type, model } = this.props.content;
+const ArticleContent = ({ content }) => {
+  const renderContent = () => {
+    const { type, model } = content;
 
     if (type === "heading") {
-      return <Header as="h3">{model.text}</Header>;
+      return (
+        <Header as="h3">
+          <header>{model.text} </header>
+        </Header>
+      );
     }
 
     if (type === "paragraph") {
-      return model.text;
+      return <article>{model.text}</article>;
     }
 
     if (type === "image") {
       return (
-        <Image
-          src={model.url}
-          alt={model.altText}
-          width="640"
-          height="420"
-          placeholderColor="#b1b1b1"
-        />
+        <figure>
+          <Image
+            src={model.url}
+            alt={model.altText}
+            width="100%"
+            height="100%"
+            placeholderColor="#b1b1b1"
+          />
+          <figcaption>{model.altText}</figcaption>
+        </figure>
       );
     }
 
@@ -35,9 +42,11 @@ class ArticleContent extends Component {
     }
   };
 
-  render() {
-    return <Item.Group>{this.renderContent()}</Item.Group>;
-  }
-}
+  return (
+    <Item.Group>
+      <section>{renderContent()}</section>
+    </Item.Group>
+  );
+};
 
 export default ArticleContent;

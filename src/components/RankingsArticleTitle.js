@@ -8,23 +8,24 @@ class RankingsArticleTitle extends React.Component {
   };
 
   handleRatingChange = value => {
-    console.log(value);
     this.setState({ rating: value });
     this.props.rate(value, this.props.article.title);
   };
 
   render() {
     return (
-      <Segment style={{ display: "flex", justifyContent: "space-between" }}>
-        {this.props.article.title}
+      <Segment className="flex">
+        <header>{this.props.article.title}</header>
 
-        <ReactStars
-          value={this.state.rating}
-          count={5}
-          onChange={this.handleRatingChange}
-          size={24}
-          color2={"#ffd700"}
-        />
+        <section>
+          <ReactStars
+            value={this.state.rating}
+            count={5}
+            onChange={this.handleRatingChange}
+            size={24}
+            color2={"#ffd700"}
+          />
+        </section>
       </Segment>
     );
   }

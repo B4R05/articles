@@ -31,8 +31,6 @@ class ArticleContainer extends Component {
     if (this.state.currentArticle !== prevState.currentArticle) {
       this.fetchArticle("nextArticle");
     }
-
-    let { currentArticle, nextArticle, readArticles } = this.state;
   }
 
   fetchArticle = property => {
@@ -75,56 +73,62 @@ class ArticleContainer extends Component {
     <Rankings readArticles={this.state.readArticles} />
   );
 
-  showArticleComponent = () => {
-    let { currentArticle } = this.state;
-    let noCurrentArticle = !Object.keys(currentArticle).length;
-
-    return (
-      <Fragment>
-        <Article currentArticle={currentArticle} />
-        {this.showButton()}
-        {this.showMessage()}
-      </Fragment>
-    );
-  };
+  showArticleComponent = () => (
+    <Fragment>
+      <Article currentArticle={this.state.currentArticle} />
+      {this.showButton()}
+      {this.showMessage()}
+    </Fragment>
+  );
 
   showButton = () => {
-    let { currentArticle, nextArticle, readArticles } = this.state;
-    if (Object.keys(nextArticle).length === 0 && readArticles.length >= 4) {
-      return (
-        <Button
-          content="Proceed To Rankings Page"
-          onClick={this.handleShowRankings}
-        />
-      );
+    let { nextArticle, readArticles } = this.state;
+    if (!Object.keys(nextArticle).length && readArticles.length >= 4) {
+      return this.showButtonToRankings();
     } else {
-      let articlesAreDifferent =
-        currentArticle === nextArticle || Object.keys(nextArticle).length === 0
-          ? true
-          : false;
-
-      return (
-        <Button
-          disabled={articlesAreDifferent}
-          loading={articlesAreDifferent}
-          content="Go To Next Article"
-          onClick={this.showNextArticle}
-        />
-      );
+      return this.showButtonToNextArticle();
     }
   };
 
-  handleShowRankings = () => {
+  showButtonToRankings = () => {
+    let buttonContent = "Proceed To Rankings Page";
+    return (
+      <Button
+        aria-label={buttonContent}
+        content={buttonContent}
+        onClick={this.handleShowRankings}
+      />
+    );
+  };
+
+  showButtonToNextArticle = () => {
+    let { currentArticle, nextArticle } = this.state;
+    let sameArticles = currentArticle === nextArticle;
+    let noNextArticle = !Object.keys(nextArticle).length;
+    let articlesAreDifferent = sameArticles || noNextArticle ? true : false;
+    let buttonContent = "Go To Next Article";
+
+    return (
+      <Button
+        aria-label={buttonContent}
+        disabled={articlesAreDifferent}
+        loading={articlesAreDifferent}
+        content={buttonContent}
+        onClick={this.showNextArticle}
+      />
+    );
+  };
+
+  handleShowRankings = () =>
     this.setState({
       showRankings: true,
       readArticles: [...this.state.readArticles, this.state.currentArticle]
     });
-  };
 
   showNextArticle = () => {
-    const { readArticles, currentArticle, nextArticle } = this.state;
-    const isInsideOfArray = readArticles.includes(currentArticle);
-    const nextArticleFetched = nextArticle !== currentArticle;
+    let { readArticles, currentArticle, nextArticle } = this.state;
+    let isInsideOfArray = readArticles.includes(currentArticle);
+    let nextArticleFetched = nextArticle !== currentArticle;
 
     if (!isInsideOfArray && nextArticleFetched) {
       this.setState({
@@ -135,11 +139,11 @@ class ArticleContainer extends Component {
   };
 
   showMessage = () => {
-    let { errorType } = this.state;
+    let { errorType, error } = this.state;
 
-    if (this.state.error) {
+    if (error) {
       return (
-        <Message negative>
+        <Message negative role="alert">
           <Message.Header>An error occured.</Message.Header>
           <p>
             We could not fetch the next article.
@@ -158,7 +162,7 @@ class ArticleContainer extends Component {
     return (
       <Container>
         <Segment loading={noCurrentArticle && true}>
-          {this.showArticleOrRankingsComponent()}
+          <main>{this.showArticleOrRankingsComponent()}</main>
         </Segment>
       </Container>
     );

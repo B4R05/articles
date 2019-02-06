@@ -1,0 +1,19 @@
+figure {
+  margin: 0;
+}
+
+.ui.container {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 675px) {
+  .flex {
+    display: inline-block;
+  }
+}
