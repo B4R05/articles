@@ -1,6 +1,10 @@
 import React, { Component, Fragment } from "react";
-import { Segment, Button, Message } from "semantic-ui-react";
+import PropTypes from "prop-types";
+import { Segment, Button } from "semantic-ui-react";
+
 import RankingsArticleTitle from "./RankingsArticleTitle";
+import MessageAlert from "./MessageAlert";
+
 import api from "../api/api";
 
 class Rankings extends Component {
@@ -47,15 +51,16 @@ class Rankings extends Component {
 
     api
       .post("/", data)
-      .then(res => this.sendSuccess(res))
-      .catch(err => this.sendError(err));
+      .then(res => this.handleResponse(res))
+      .catch(err => this.handleError(err));
   };
 
-  sendSuccess = res => {
+  handleResponse = res => {
+    console.log(res);
     this.setState({ loading: false, error: false });
   };
 
-  sendError = err => {
+  handleError = err => {
     console.log(err);
     if (!err.response) {
       // network error
@@ -71,39 +76,49 @@ class Rankings extends Component {
   };
 
   showMessage = () => {
-    let { errorType } = this.state;
+    let { error } = this.state;
 
-    if (this.state.error === false) {
-      return (
-        <Message positive role="alert">
-          <Message.Header>Success!</Message.Header>
-          <p>Thanks for submitting your rankings!</p>
-        </Message>
-      );
+    if (error === false) {
+      return this.showSuccessMessage();
     }
 
-    if (this.state.error) {
-      return (
-        <Message negative role="alert">
-          <Message.Header>An error occured.</Message.Header>
-          <p>
-            We could not submit your rankings.
-            {errorType === "Network"
-              ? " It looks like you may be offline. Please check your internet connection."
-              : ` The error code was: ${errorType}`}
-          </p>
-        </Message>
-      );
+    if (error) {
+      return this.showErrorMessage();
     }
   };
 
+  showSuccessMessage = () => {
+    let type = "positive";
+    let header = "Success!";
+    let content = "Thanks for submitting your rankings!";
+    return <MessageAlert header={header} content={content} type={type} />;
+  };
+
+  showErrorMessage = () => {
+    let { errorType } = this.state;
+    let type = "negative";
+    let header = "An error occured.";
+    let content = "We could not post your rankings!";
+    let extraContent =
+      errorType === "Network"
+        ? " It looks like you may be offline. Please check your internet connection."
+        : `The error code was: ${errorType}`;
+
+    return (
+      <MessageAlert
+        header={header}
+        content={content}
+        extraContent={extraContent}
+        type={type}
+      />
+    );
+  };
+
   render() {
-    let { ratings } = this.state;
+    let { ratings, loading } = this.state;
     let { readArticles } = this.props;
-    let buttonContent =
-      ratings.length === readArticles.length
-        ? "Send"
-        : "Please rate all articles";
+    let allArticlesRated = ratings.length === readArticles.length;
+    let buttonContent = allArticlesRated ? "Send" : "Please rate all articles";
 
     return (
       <Fragment>
@@ -111,7 +126,7 @@ class Rankings extends Component {
         <Button
           primary
           aria-label={buttonContent}
-          loading={this.state.loading}
+          loading={loading}
           onClick={this.handleClick}
           content={buttonContent}
           disabled={ratings.length === readArticles.length ? false : true}
@@ -121,5 +136,9 @@ class Rankings extends Component {
     );
   }
 }
+
+Rankings.propTypes = {
+  readArticles: PropTypes.array.isRequired
+};
 
 export default Rankings;

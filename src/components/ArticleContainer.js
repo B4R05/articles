@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from "react";
-import { Button, Container, Segment, Message, Icon } from "semantic-ui-react";
+import { Button, Container, Segment } from "semantic-ui-react";
 
 import Article from "./Article";
 import Rankings from "./Rankings";
+import MessageAlert from "./MessageAlert";
 
 import api from "../api/api";
 import returnRandomNumberOnce from "../helpers/helpers";
@@ -23,21 +24,20 @@ class ArticleContainer extends Component {
   }
 
   componentDidMount() {
-    this.fetchArticle("currentArticle");
+    this.fetchRandomArticle("currentArticle");
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.state);
     if (this.state.currentArticle !== prevState.currentArticle) {
-      this.fetchArticle("nextArticle");
+      this.fetchRandomArticle("nextArticle");
     }
   }
 
-  fetchArticle = property => {
-    let randomNumber = this.randomNumbers.next().value;
+  fetchRandomArticle = property => {
+    let randomNonRepeatingNumber = this.randomNumbers.next().value;
 
     api
-      .get(`/${randomNumber}`)
+      .get(`/${randomNonRepeatingNumber}`)
       .then(res => this.handleResponse(property, res.data))
       .catch(err => this.handleError(err));
   };
@@ -76,10 +76,31 @@ class ArticleContainer extends Component {
   showArticleComponent = () => (
     <Fragment>
       <Article currentArticle={this.state.currentArticle} />
-      {this.showButton()}
-      {this.showMessage()}
+      <nav>{this.showButton()}</nav>
     </Fragment>
   );
+
+  showErrorMessage = () => {
+    let { errorType, error } = this.state;
+    let type = "negative";
+    let header = "An error occured.";
+    let content = "We could not fetch the next article.";
+    let extraContent =
+      errorType === "Network"
+        ? " It looks like you may be offline. Please check your internet connection."
+        : `The error code was: ${errorType}`;
+
+    if (error) {
+      return (
+        <MessageAlert
+          header={header}
+          content={content}
+          extraContent={extraContent}
+          type={type}
+        />
+      );
+    }
+  };
 
   showButton = () => {
     let { nextArticle, readArticles } = this.state;
@@ -101,6 +122,12 @@ class ArticleContainer extends Component {
     );
   };
 
+  handleShowRankings = () =>
+    this.setState({
+      showRankings: true,
+      readArticles: [...this.state.readArticles, this.state.currentArticle]
+    });
+
   showButtonToNextArticle = () => {
     let { currentArticle, nextArticle } = this.state;
     let sameArticles = currentArticle === nextArticle;
@@ -114,18 +141,12 @@ class ArticleContainer extends Component {
         disabled={articlesAreDifferent}
         loading={articlesAreDifferent}
         content={buttonContent}
-        onClick={this.showNextArticle}
+        onClick={this.handleShowNextArticle}
       />
     );
   };
 
-  handleShowRankings = () =>
-    this.setState({
-      showRankings: true,
-      readArticles: [...this.state.readArticles, this.state.currentArticle]
-    });
-
-  showNextArticle = () => {
+  handleShowNextArticle = () => {
     let { readArticles, currentArticle, nextArticle } = this.state;
     let isInsideOfArray = readArticles.includes(currentArticle);
     let nextArticleFetched = nextArticle !== currentArticle;
@@ -138,24 +159,6 @@ class ArticleContainer extends Component {
     }
   };
 
-  showMessage = () => {
-    let { errorType, error } = this.state;
-
-    if (error) {
-      return (
-        <Message negative role="alert">
-          <Message.Header>An error occured.</Message.Header>
-          <p>
-            We could not fetch the next article.
-            {errorType === "Network"
-              ? " It looks like you may be offline. Please check your internet connection."
-              : `The error code was: ${errorType}`}
-          </p>
-        </Message>
-      );
-    }
-  };
-
   render() {
     let noCurrentArticle = !Object.keys(this.state.currentArticle).length;
 
@@ -163,6 +166,7 @@ class ArticleContainer extends Component {
       <Container>
         <Segment loading={noCurrentArticle && true}>
           <main>{this.showArticleOrRankingsComponent()}</main>
+          {this.showErrorMessage()}
         </Segment>
       </Container>
     );

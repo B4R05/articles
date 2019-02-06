@@ -1,10 +1,11 @@
-import React, { Component } from "react";
-import { Segment, Header, Item } from "semantic-ui-react";
+import React from "react";
+import PropTypes from "prop-types";
+import { Header, Item } from "semantic-ui-react";
 import Image from "react-graceful-image";
 
 const ArticleContent = ({ content }) => {
   const renderContent = () => {
-    const { type, model } = content;
+    let { type, model } = content;
 
     if (type === "heading") {
       return (
@@ -28,7 +29,9 @@ const ArticleContent = ({ content }) => {
             height="100%"
             placeholderColor="#b1b1b1"
           />
-          <figcaption>{model.altText}</figcaption>
+          <figcaption>
+            <i>{model.altText}</i>
+          </figcaption>
         </figure>
       );
     }
@@ -47,6 +50,10 @@ const ArticleContent = ({ content }) => {
       <section>{renderContent()}</section>
     </Item.Group>
   );
+};
+
+ArticleContent.propTypes = {
+  content: PropTypes.object.isRequired
 };
 
 export default ArticleContent;

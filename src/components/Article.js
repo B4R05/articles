@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import { Segment, Header } from "semantic-ui-react";
 import ArticleContent from "./ArticleContent";
 
@@ -19,6 +20,10 @@ const Article = ({ currentArticle }) => {
       {renderArticleContents()}
     </article>
   );
+};
+
+Article.propTypes = {
+  currentArticle: PropTypes.object.isRequired
 };
 
 export default Article;

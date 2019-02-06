@@ -2,6 +2,10 @@ figure {
   margin: 0;
 }
 
+nav {
+  margin-top: 1.5rem;
+}
+
 .ui.container {
   margin-top: 2rem;
   margin-bottom: 2rem;

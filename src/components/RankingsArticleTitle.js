@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Segment } from "semantic-ui-react";
 import ReactStars from "react-stars";
 
@@ -30,5 +31,9 @@ class RankingsArticleTitle extends React.Component {
     );
   }
 }
+
+RankingsArticleTitle.propTypes = {
+  article: PropTypes.object.isRequired
+};
 
 export default RankingsArticleTitle;
