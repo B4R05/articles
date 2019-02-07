@@ -26,6 +26,11 @@ This web app renders 1 random article at a time 5 times in controlled succession
 
 ![](demo.gif)
 
+
+### Live version: 
+
+https://bbc-news-cf804.firebaseapp.com
+
 # Installation
 
 For Mac OS, Linux and Windows, from your terminal:
