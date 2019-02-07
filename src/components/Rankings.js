@@ -15,12 +15,14 @@ class Rankings extends Component {
   };
 
   rateArticleTitle = (rating, title) => {
-    let { ratings } = this.state;
-    let foundArticleTitle = ratings.find(obj => obj.title === title);
+    const { ratings } = this.state;
+    const foundArticleTitle = ratings.find(obj => obj.title === title);
 
     if (foundArticleTitle) {
       //has user rated this article before? then 'update' that article.
-      let arrayWithoutFound = ratings.filter(obj => obj !== foundArticleTitle);
+      const arrayWithoutFound = ratings.filter(
+        obj => obj !== foundArticleTitle
+      );
 
       this.setState({
         ratings: [...arrayWithoutFound, { rating, title }]
@@ -46,7 +48,7 @@ class Rankings extends Component {
   };
 
   sendRatingsData = () => {
-    let data = this.state.ratings;
+    const data = this.state.ratings;
 
     api
       .post("/", data)
@@ -75,7 +77,7 @@ class Rankings extends Component {
   };
 
   showMessage = () => {
-    let { error } = this.state;
+    const { error } = this.state;
 
     if (error === false) {
       return this.showSuccessMessage();
@@ -87,18 +89,18 @@ class Rankings extends Component {
   };
 
   showSuccessMessage = () => {
-    let type = "positive";
-    let header = "Success!";
-    let content = "Thanks for submitting your rankings!";
+    const type = "positive";
+    const header = "Success!";
+    const content = "Thanks for submitting your rankings!";
     return <MessageAlert header={header} content={content} type={type} />;
   };
 
   showErrorMessage = () => {
-    let { errorType } = this.state;
-    let type = "negative";
-    let header = "An error occured.";
-    let content = "We could not post your rankings!";
-    let extraContent =
+    const { errorType } = this.state;
+    const type = "negative";
+    const header = "An error occured.";
+    const content = "We could not post your rankings!";
+    const extraContent =
       errorType === "Network"
         ? " It looks like you may be offline. Please check your internet connection."
         : `The error code was: ${errorType}`;
@@ -114,10 +116,12 @@ class Rankings extends Component {
   };
 
   render() {
-    let { ratings, loading } = this.state;
-    let { readArticles } = this.props;
-    let allArticlesRated = ratings.length === readArticles.length;
-    let buttonContent = allArticlesRated ? "Send" : "Please rate all articles";
+    const { ratings, loading } = this.state;
+    const { readArticles } = this.props;
+    const allArticlesRated = ratings.length === readArticles.length;
+    const buttonContent = allArticlesRated
+      ? "Send"
+      : "Please rate all articles";
 
     return (
       <Fragment>
