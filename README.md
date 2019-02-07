@@ -2,6 +2,8 @@
 
 > Read 5 random articles then rate them with this React app.
 
+https://img.shields.io/github/last-commit/GavBaros/articles.svg?style=flat
+
 ## Table of Contents
 
 1. [About](#about)
