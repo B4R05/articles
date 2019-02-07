@@ -8,6 +8,7 @@ class RankingsArticleTitle extends React.Component {
     rating: 0
   };
 
+  //pass rating value AND article title to parent component
   handleRatingChange = value => {
     this.setState({ rating: value });
     this.props.rate(value, this.props.article.title);

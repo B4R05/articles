@@ -4,6 +4,7 @@ import { Segment, Header } from "semantic-ui-react";
 import ArticleContent from "./ArticleContent";
 
 const Article = ({ currentArticle }) => {
+  //only shows ArticleContents if Article is passed a non-empty currentArticle object
   const renderArticleContents = () => {
     if (Object.keys(currentArticle).length) {
       return currentArticle.body.map((content, i) => (

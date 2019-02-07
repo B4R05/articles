@@ -1,3 +1,4 @@
+//generator helper which can return a non-repeating random number each time invoked
 export default function* returnRandomNumberOnce(numbersArray) {
   let i = numbersArray.length;
 

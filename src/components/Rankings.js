@@ -16,12 +16,11 @@ class Rankings extends Component {
 
   rateArticleTitle = (rating, title) => {
     let { ratings } = this.state;
+    let foundArticleTitle = ratings.find(obj => obj.title === title);
 
-    let foundArticle = ratings.find(obj => obj.title === title);
-
-    if (foundArticle) {
+    if (foundArticleTitle) {
       //has user rated this article before? then 'update' that article.
-      let arrayWithoutFound = ratings.filter(obj => obj !== foundArticle);
+      let arrayWithoutFound = ratings.filter(obj => obj !== foundArticleTitle);
 
       this.setState({
         ratings: [...arrayWithoutFound, { rating, title }]

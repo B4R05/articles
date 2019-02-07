@@ -19,7 +19,7 @@ class ArticleContainer extends Component {
       showRankings: false,
       error: false
     };
-
+    //generate a random number from an array of numbers
     this.randomNumbers = returnRandomNumberOnce([1, 2, 3, 4, 5]);
   }
 
@@ -49,10 +49,10 @@ class ArticleContainer extends Component {
   handleError = err => {
     console.log(err);
     if (!err.response) {
-      // network error
+      // then a network error is present
       this.setState({ error: true, errorType: "Network" });
     } else {
-      // http status code
+      // then expect an http status code
       this.setState({ error: true, errorType: err.response.status });
     }
   };
@@ -80,28 +80,8 @@ class ArticleContainer extends Component {
     </Fragment>
   );
 
-  showErrorMessage = () => {
-    let { errorType, error } = this.state;
-    let type = "negative";
-    let header = "An error occured.";
-    let content = "We could not fetch the next article.";
-    let extraContent =
-      errorType === "Network"
-        ? " It looks like you may be offline. Please check your internet connection."
-        : `The error code was: ${errorType}`;
-
-    if (error) {
-      return (
-        <MessageAlert
-          header={header}
-          content={content}
-          extraContent={extraContent}
-          type={type}
-        />
-      );
-    }
-  };
-
+  //only allow the user the option to navigate to Rankings component if:
+  //atleast 4 articles were read AND there is no nextArticle fetched
   showButton = () => {
     let { nextArticle, readArticles } = this.state;
     if (!Object.keys(nextArticle).length && readArticles.length >= 4) {
@@ -122,6 +102,7 @@ class ArticleContainer extends Component {
     );
   };
 
+  //adds the 5th article read by the user to readArticles, then allows option to navigate to Rankings
   handleShowRankings = () =>
     this.setState({
       showRankings: true,
@@ -156,6 +137,28 @@ class ArticleContainer extends Component {
         currentArticle: nextArticle,
         readArticles: [...readArticles, currentArticle]
       });
+    }
+  };
+
+  showErrorMessage = () => {
+    let { errorType, error } = this.state;
+    let type = "negative";
+    let header = "An error occured.";
+    let content = "We could not fetch the next article.";
+    let extraContent =
+      errorType === "Network"
+        ? " It looks like you may be offline. Please check your internet connection."
+        : `The error code was: ${errorType}`;
+
+    if (error) {
+      return (
+        <MessageAlert
+          header={header}
+          content={content}
+          extraContent={extraContent}
+          type={type}
+        />
+      );
     }
   };
 
