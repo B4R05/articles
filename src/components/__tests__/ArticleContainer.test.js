@@ -68,14 +68,6 @@ describe("ArticleContainer.js", () => {
     expect(wrapped.find("Article").length).toEqual(1);
   });
 
-  it("shows a Rankings component", async () => {
-    await wrapped.setState({
-      showRankings: true
-    });
-
-    expect(wrapped.find("Rankings").length).toEqual(1);
-  });
-
   it("shows a main tag, Container and 2 Segment components ", () => {
     expect(wrapped.find("main").length).toEqual(1);
     expect(wrapped.find(Container).length).toEqual(1);

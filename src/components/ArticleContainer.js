@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, Suspense } from "react";
 import { Button, Container, Segment } from "semantic-ui-react";
-
-import Article from "./Article";
-import Rankings from "./Rankings";
-import MessageAlert from "./MessageAlert";
 
 import api from "../api/api";
 import returnRandomNumberOnce from "../helpers/helpers";
+
+import Article from "./Article";
+import MessageAlert from "./MessageAlert";
+const Rankings = React.lazy(() => import("./Rankings"));
 
 class ArticleContainer extends Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class ArticleContainer extends Component {
   }
 
   fetchRandomArticle = property => {
-    let randomNonRepeatingNumber = this.randomNumbers.next().value;
+    const randomNonRepeatingNumber = this.randomNumbers.next().value;
 
     api
       .get(`/${randomNonRepeatingNumber}`)
@@ -70,7 +70,9 @@ class ArticleContainer extends Component {
   };
 
   showRankingsComponent = () => (
-    <Rankings readArticles={this.state.readArticles} />
+    <Suspense fallback={<Segment loading />}>
+      <Rankings readArticles={this.state.readArticles} />
+    </Suspense>
   );
 
   showArticleComponent = () => (
@@ -83,7 +85,7 @@ class ArticleContainer extends Component {
   //only allow the user the option to navigate to Rankings component if:
   //atleast 4 articles were read AND there is no nextArticle fetched
   showButton = () => {
-    let { nextArticle, readArticles } = this.state;
+    const { nextArticle, readArticles } = this.state;
     if (!Object.keys(nextArticle).length && readArticles.length >= 4) {
       return this.showButtonToRankings();
     } else {
@@ -92,7 +94,7 @@ class ArticleContainer extends Component {
   };
 
   showButtonToRankings = () => {
-    let buttonContent = "Proceed To Rankings Page";
+    const buttonContent = "Proceed To Rankings Page";
     return (
       <Button
         aria-label={buttonContent}
@@ -110,11 +112,11 @@ class ArticleContainer extends Component {
     });
 
   showButtonToNextArticle = () => {
-    let { currentArticle, nextArticle } = this.state;
-    let sameArticles = currentArticle === nextArticle;
-    let noNextArticle = !Object.keys(nextArticle).length;
-    let articlesAreDifferent = sameArticles || noNextArticle ? true : false;
-    let buttonContent = "Go To Next Article";
+    const { currentArticle, nextArticle } = this.state;
+    const sameArticles = currentArticle === nextArticle;
+    const noNextArticle = !Object.keys(nextArticle).length;
+    const articlesAreDifferent = sameArticles || noNextArticle ? true : false;
+    const buttonContent = "Go To Next Article";
 
     return (
       <Button
@@ -128,9 +130,9 @@ class ArticleContainer extends Component {
   };
 
   handleShowNextArticle = () => {
-    let { readArticles, currentArticle, nextArticle } = this.state;
-    let isInsideOfArray = readArticles.includes(currentArticle);
-    let nextArticleFetched = nextArticle !== currentArticle;
+    const { readArticles, currentArticle, nextArticle } = this.state;
+    const isInsideOfArray = readArticles.includes(currentArticle);
+    const nextArticleFetched = nextArticle !== currentArticle;
 
     if (!isInsideOfArray && nextArticleFetched) {
       this.setState({
@@ -141,11 +143,11 @@ class ArticleContainer extends Component {
   };
 
   showErrorMessage = () => {
-    let { errorType, error } = this.state;
-    let type = "negative";
-    let header = "An error occured.";
-    let content = "We could not fetch the next article.";
-    let extraContent =
+    const { errorType, error } = this.state;
+    const type = "negative";
+    const header = "An error occured.";
+    const content = "We could not fetch the next article.";
+    const extraContent =
       errorType === "Network"
         ? " It looks like you may be offline. Please check your internet connection."
         : `The error code was: ${errorType}`;
@@ -163,7 +165,7 @@ class ArticleContainer extends Component {
   };
 
   render() {
-    let noCurrentArticle = !Object.keys(this.state.currentArticle).length;
+    const noCurrentArticle = !Object.keys(this.state.currentArticle).length;
 
     return (
       <Container>

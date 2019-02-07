@@ -6,7 +6,7 @@ import Image from "react-graceful-image";
 const ArticleContent = ({ content }) => {
   //renderContent only returns JSX once, depending on the 'type' of 'content'
   const renderContent = () => {
-    let { type, model } = content;
+    const { type, model } = content;
 
     if (type === "heading") {
       return (
