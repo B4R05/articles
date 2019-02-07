@@ -1,76 +1,105 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Introduction
 
-## Commit messages
+> Read 5 random articles then rate them with this React app.
 
-Click or hover on the commit messages to view an in-depth explanation behind the commits.
+## Table of Contents
 
-- simulating slow network: user cannot click on Next Article until a next article is fetched
-- simulating offline: user cannot click on next article.
--
+1. [About](#about)
+1. [Installation](#installation)
+1. [Tests](#tests)
+1. [Performance](#performance)
+1. [Simulating Errors](#errors)
+1. [Styling](#styling)
+1. [Accessibility](#accessibility)
 
-## Available Scripts
+# About
 
-In the project directory, you can run:
+This web app renders 1 random article at a time 5 times in controlled succession and allows a user to rank all of them by a rating system once they all have been read.
 
-### `npm start`
+### Features:
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Fetches a random non-repeating article at a time
+- Fetches the next article while the user is still reading the current article
+- Rank all read articles once you read 5 of them by rating them individually in a Rankings page
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+### Demo:
 
-### `npm test`
+![](demo.gif)
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Installation
 
-### `npm run build`
+For Mac OS, Linux and Windows, from your terminal:
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```sh
+git clone https://github.com/GavBaros/articles.git
+cd articles
+npm install
+npm start
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+# Tests
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+By default, all `'it'` and `'describe'` test descriptors will be visible on the terminal at runtime.
 
-### `npm run eject`
+From your terminal:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```sh
+npm run test
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+If you do not wish to see the test descriptors, simply run:
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```sh
+npm run test-silent
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+# Performance
 
-## Learn More
+[1]: https://reactjs.org/docs/code-splitting.html#reactlazy
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Performance considerations such as making use of code-splitting through [React Lazy][1] have been made. While this may be unnecessary for such a small app, using code-splitting in this case demonstrates how this application can be performant as it scales.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Additionally, for a seamless user experience, the next random article is fetched while the user is still reading the current one rather than fetched each time the user navigates to a new article.
 
-### Code Splitting
+# Errors
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+Message alerts appear in the case of successfully posting data, network and status code errors.
+Feel free to simulate errors while using the application.
 
-### Analyzing the Bundle Size
+#### To simulate an offline network error:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+- Open the Chrome Developer Tools with `⌘ + ⌥ + C` for Mac OS and `Control + Shift + C` for Linux / Windows
+- Select the `Network` tab
+- Click on `Offline`
 
-### Making a Progressive Web App
+![](offline.png)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+#### To simulate a slow connection:
 
-### Advanced Configuration
+- While still in Chrome Developer Tools, under the `Network` tab, click on `Online`
+- When the small sub-menu appears, click on `Slow 3G`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+![](slow3g.png)
 
-### Deployment
+# Styling
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+[2]: https://github.com/Semantic-Org/Semantic-UI-React
 
-### `npm run build` fails to minify
+The [Semantic UI React][2] component library has been used for a highly scalable, ready-to-use and consistent styling across the app. This app is also fully responsive and fits to mobile screens.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+#### Additional user experience implementations:
+
+- Loading indicators are displayed while fetching and posting data.
+- Button navigating to the next article is disabled and in a loading mode until the next article is actually fetched
+- Feedback messages are given to the user when successfully posting data or when a network error occurs
+
+# Accessibility
+
+This app is fully accessible and passes Chrome Developer Tools's Accessibility audit with a score of 100%!
+
+#### Specific implementations include:
+
+- Using semantic HTML tags such as `<article>`, `<main>`, `<header>` and `<section>` throughout
+- Images being wrapped with `<figure>` and `<figcaption>` tags as well as having `alt-text` attributes
+- Buttons have an `aria-label` attribute
+- Message alerts having a `role` attribute set to `alert`

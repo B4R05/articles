@@ -1,6 +1,7 @@
 {
   "name": "bbc-news-test",
   "version": "0.1.0",
+  "author": "Gavish Barosee",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
@@ -19,6 +20,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --verbose=true",
+    "test-silent": "react-scripts test --verbose=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
