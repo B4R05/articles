@@ -30,12 +30,12 @@ let readArticles = [
 
 //function inside of Rankings component
 const rateArticleTitle = (rating, title) => {
-  let ratings = wrappedParent.state().ratings;
-  let foundArticle = ratings.find(obj => obj.title === title);
+  const ratings = wrappedParent.state().ratings;
+  const foundArticle = ratings.find(obj => obj.title === title);
 
   if (foundArticle) {
     //has user rated this article before? then 'update' that article.
-    let arrayWithoutFound = ratings.filter(obj => obj !== foundArticle);
+    const arrayWithoutFound = ratings.filter(obj => obj !== foundArticle);
 
     wrappedParent.setState({
       ratings: [...arrayWithoutFound, { rating, title }]

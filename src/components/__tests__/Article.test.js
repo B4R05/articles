@@ -1,6 +1,5 @@
 import React from "react";
 import { shallow } from "enzyme";
-
 import Article from "../Article";
 import ArticleContent from "../ArticleContent";
 
