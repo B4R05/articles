@@ -22,12 +22,12 @@ This web app renders 1 random article at a time 5 times in controlled succession
 - Fetches the next article while the user is still reading the current article
 - Rank all read articles once you read 5 of them by rating them individually in a Rankings page
 
-### Demo:
+### Preview:
 
 ![](demo.gif)
 
 
-### Live version: 
+### Live Demo: 
 
 https://bbc-news-cf804.firebaseapp.com
 
